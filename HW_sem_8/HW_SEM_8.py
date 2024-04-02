@@ -25,8 +25,10 @@ def search_user(filename: str, data: str) -> str:
     """
     with open(filename, "r", encoding="utf-8") as file:
         list_1 = file.read().split("\n")
+        #print(list_1)
     result = []
     result = [i for i in list_1 if data in i]
+    #print(result)
     if not result:
         return "По указанному значению совпадений не найдено"
     return "\n".join(result)
@@ -40,16 +42,36 @@ def transfer_data(source: str, dest: str, num_row: int):
     dest: str - имя файла куда переносим
     num_row: int - номер переносимой строки
     """
-    pass
+    with open(source, "r", encoding="utf-8") as file:
+    list_1 = file.read().split("\n")
+    print(list_1)
+    result = []
+    result = [i for i in list_1 if data in i]
+    #print(result)
+    if not result:
+        return "По указанному значению совпадений не найдено"
+    with open(dest, "r", encoding="utf-8") as file:
+    list_2 = file.read().split("\n")
+    #print(list_1)
+    
+    #Проверка наличия искомого в dest и запись в случае отсутсвтия
+    for i in result:
+        if i not in list_2:
+            with open(dest, "a", encoding="utf-8") as copy:
+                copy.write(f"{new_line}{i}")
+
+    
 
 
 INFO_STRING = """
-Выберите ркжим работы:
+Выберите режим работы:
 1 - вывести все данные
 2 - добавление нового пользователя
 3 - поиск
 4 - перенос записи в другой файл
+5 - остановить выполнение программы 
 """
+line = '\n'
 
 file_1 = 'Numbers_1.txt'
 file_2 = 'Numbers_2.txt'
@@ -60,7 +82,7 @@ if (file_1 or file_2) not in os.listdir():
 
 
 while True:
-    mode = int(input(INFO_STRING))
+    mode = int(input(f"{INFO_STRING} {line}"))
     if mode == 1:
         print(read_all(file_1))
     elif mode == 2:
@@ -71,5 +93,8 @@ while True:
         data = input("Введите значение: ")
         print(search_user(file_1, data))
     elif mode == 4:
-        # Тут нужно вызвать функцию с аргументами
+        data = input("Введите значение для поиска и копирования: ")
+        match = search_user(file_1, data)
         pass
+    elif mode == 5:
+        sys.exit()
