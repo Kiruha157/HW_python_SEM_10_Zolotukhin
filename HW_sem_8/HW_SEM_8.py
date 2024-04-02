@@ -34,7 +34,7 @@ def search_user(filename: str, data: str) -> str:
     return "\n".join(result)
 
 
-def transfer_data(source: str, dest: str, num_row: int):
+def transfer_data(source: str, dest: str, data: str):
     """
     Функция для переноса указанной строки из одного файла
     в другой
@@ -43,22 +43,30 @@ def transfer_data(source: str, dest: str, num_row: int):
     num_row: int - номер переносимой строки
     """
     with open(source, "r", encoding="utf-8") as file:
-    list_1 = file.read().split("\n")
-    print(list_1)
+        list_1 = file.read().split("\n")
+    #print(list_1)
     result = []
     result = [i for i in list_1 if data in i]
     #print(result)
     if not result:
         return "По указанному значению совпадений не найдено"
     with open(dest, "r", encoding="utf-8") as file:
-    list_2 = file.read().split("\n")
+        list_2 = file.read().split("\n")
     #print(list_1)
     
     #Проверка наличия искомого в dest и запись в случае отсутсвтия
+    new_line = '\n' if read_all(dest) != "" else ''
+    count = 0
     for i in result:
         if i not in list_2:
             with open(dest, "a", encoding="utf-8") as copy:
                 copy.write(f"{new_line}{i}")
+                count += 1
+            return f"{line}---Скопировано из {source} в {dest} {count} контактов"
+        else:
+            return f"{line}Контакт уже есть в файле {dest}"
+    
+
 
     
 
@@ -86,15 +94,14 @@ while True:
     if mode == 1:
         print(read_all(file_1))
     elif mode == 2:
-        name = input("Введите Ваше имя: ")
+        name = input(f"{line}Введите Ваше имя: ")
         phone = input("Введите Ваш телефон: ")
         add_new_user(name, phone, file_1)
     elif mode == 3:
-        data = input("Введите значение: ")
+        data = input(f"{line}Введите значение: ")
         print(search_user(file_1, data))
     elif mode == 4:
-        data = input("Введите значение для поиска и копирования: ")
-        match = search_user(file_1, data)
-        pass
+        data = input(f"{line}Введите значение для поиска и копирования: ")
+        print(transfer_data(file_1, file_2, data))
     elif mode == 5:
         sys.exit()
